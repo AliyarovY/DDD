@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class Connector:
@@ -14,17 +15,15 @@ class Connector:
         self.__connect()
 
     def __connect(self):
-        """
-        Проверка на существование файла с данными и
-        создание его при необходимости
-        """
-        pass
+        with open(f'{self.__data_file}', 'w+') as file:
+            file.close()
+
 
     def insert(self, data):
-        """
-        Запись данных в файл с сохранением структуры и исходных данных
-        """
-        pass
+
+        with open (self.__data_file, 'a') as datafile:
+            datafile.write(data)
+
 
     def select(self, query):
         key = None
@@ -44,7 +43,19 @@ class Connector:
         Удаление записей из файла, которые соответствуют запрос,
         как в методе select
         """
-        pass
+
+        with open(self.__data_file, 'r') as json_file:
+            data = json.load(json_file)
+
+            for k in data[query.keys()]:
+                if data[k] == query.values():
+                    del data[k]
+
+        os.remove(self.__data_file)
+
+        with open(self.__data_file, 'w') as fw:
+            json.dump(data, fw)
+
 
 
 if __name__ == '__main__':
