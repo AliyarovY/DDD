@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 class Product:
     id: int
     title: str
@@ -18,6 +21,27 @@ class Product:
         """
         return True if self.count > 0 else False
 
-
     def __len__(self):
         return self.count
+
+
+@dataclass
+class Category:
+    id: int
+    title: str
+    description: str
+
+    def __post_init__(self):
+        self.products = [self.id, self.title, self.description]
+
+    def __bool__(self):
+        """
+        Проверяет есть ли товар в категории
+        """
+        return bool(self.products)
+
+    def __len__(self):
+        """
+        Возвращает количество наименований товаров, у которых есть наличие на складе
+        """
+        return len(self.products)
